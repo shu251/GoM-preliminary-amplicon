@@ -12,33 +12,33 @@ qiime tools import \
 
 # Get starting stats on input sequences
 qiime demux summarize \
-        --i-data gom-pe.qza \
-        --o-visualization gom-pe.qzv
+        --i-data /scratch/user/skhu/gom.qza \
+        --o-visualization /scratch/user/skhu/gom.qzv
 
 # Remove 18S V4 primers
 echo "run cutadapt"
 
 qiime cutadapt trim-paired \
-        --i-demultiplexed-sequences gom-pe.qza \
+        --i-demultiplexed-sequences /scratch/user/skhu/gom.qza \
         --p-cores 4 \
         --p-front-f CCAGCASCYGCGGTAATTCC \
         --p-front-r ACTTTCGTTCTTGAT \
         --p-error-rate 0.1 \
         --p-overlap 3 \
        --p-match-adapter-wildcards \
-        --o-trimmed-sequences gom-pe-trimmed.qza 
+        --o-trimmed-sequences /scratch/user/skhu/gom-pe-trimmed.qza 
 
 # Grab trim stats from cutadapt
 qiime demux summarize \
-        --i-data gom-pe-trimmed.qza \
-        --o-visualization gom-pe-trimmed.qzv
+        --i-data /scratch/user/skhu/gom-pe-trimmed.qza \
+        --o-visualization /scratch/user/skhu/gom-pe-trimmed.qzv
 
 # Run dada2
 echo "executing dada2"
 echo "threads queued" $OMP_NUM_THREADS
 
 qiime dada2 denoise-paired \
-        --i-demultiplexed-seqs gom-pe-trimmed.qza \
+        --i-demultiplexed-seqs /scratch/user/skhu/gom-pe-trimmed.qza \
         --p-trunc-len-f 215 \
         --p-trunc-len-r 200 \
         --p-max-ee-f 2 \
@@ -57,7 +57,7 @@ echo "dada2 stats"
 
 qiime metadata tabulate \
   --m-input-file /scratch/user/skhu/gom-hrr/gom-dada2-stats.qza \
-  --o-visualization gom-dada2-stats-summ.qzv
+  --o-visualization /scratch/user/skhu/gom-hrr/gom-dada2-stats-summ.qzv
 
 
 ## Convert to TSV ASV table
